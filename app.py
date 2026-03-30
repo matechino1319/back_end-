@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify, abort
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -5,21 +6,11 @@ from sqlalchemy import or_
 
 from models import db, Player
 
-# ==== CONFIG MySQL (Workbench) ====
-DB_USER = "root"
-DB_PASSWORD = "Mateo1319#"
-DB_HOST = "127.0.0.1"
-DB_PORT = 3306
-DB_NAME = "futdata"
-
 def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    # IMPORTANTE: la clave correcta es SQLALCHEMY_DATABASE_URI
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    )
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
